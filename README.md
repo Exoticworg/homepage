@@ -11,3 +11,13 @@ Homepage von ExoticWorg – läuft über GitHub Pages.
 5. Unten **Commit changes** – nach ca. 1 Minute ist der Plan online.
 
 Wichtig: Anführungszeichen und Kommas stehen lassen, sonst kann die Seite den Plan nicht lesen.
+
+## Partner ändern
+
+Datei **`partner.json`** – pro Partner ein Block:
+
+- `name` – Anzeigename
+- `art` – `"partner"` (Freund/Empfehlung) oder `"werbung"` (Affiliate-/Werbelink, wird als „Werbung“ markiert – das ist Pflicht)
+- `text` – ein, zwei Sätze
+- `url` – Link (muss mit `https://` anfangen; leer = Karte ohne Link)
+- `code` – optional ein Rabattcode

@@ -23,6 +23,7 @@
       <a href="#stream">Stream</a>
       <a href="#plan">Streamplan</a>
       <a href="#karten">Karten</a>
+      <a href="#partner">Partner</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
   </div>
@@ -98,6 +99,16 @@
     </div>
   </section>
 
+  <section id="partner">
+    <div class="wrap">
+      <p class="kicker">Mit dabei</p>
+      <h2>Partner &amp; Empfehlungen</h2>
+      <p class="intro">Leute und Läden, hinter denen ich stehe. Wenn du über diese Links kaufst, unterstützt du den Stream – dich kostet es nichts extra.</p>
+      <div class="grid g3" id="partnerGrid"></div>
+      <p class="note">Mit „Werbung“ markierte Links sind Affiliate- oder Werbelinks: Kaufst du darüber, bekomme ich eventuell eine kleine Provision. Am Preis ändert sich für dich nichts.</p>
+    </div>
+  </section>
+
   <section id="kontakt">
     <div class="wrap contact">
       <div>
@@ -153,6 +164,17 @@ function zeige(P) {
     break;
   }
 }
+/* Partner kommen aus partner.json */
+fetch('partner.json', { cache: 'no-cache' }).then(r => r.json()).then(P => {
+  const L = (P.partner || []).filter(p => p && p.name);
+  if (!L.length) { document.getElementById('partner').remove(); document.querySelector('.nav a[href="#partner"]')?.remove(); return; }
+  document.getElementById('partnerGrid').innerHTML = L.map(p => {
+    const ok = /^https:\/\//.test(p.url || '');
+    const tag = p.art === 'werbung' ? '<span class="badge ad">Werbung</span>' : '<span class="badge">Partner</span>';
+    const inner = `<div class="ph"><b>${esc(p.name)}</b>${tag}</div><p>${esc(p.text)}</p>${p.code ? `<div class="code">Code: <b>${esc(p.code)}</b></div>` : ''}${ok ? '<span class="go">Zur Seite →</span>' : ''}`;
+    return ok ? `<a class="card pt" href="${esc(p.url)}" target="_blank" rel="${p.art === 'werbung' ? 'sponsored ' : ''}noopener">${inner}</a>` : `<div class="card pt">${inner}</div>`;
+  }).join('');
+}).catch(() => { document.getElementById('partner').remove(); });
 fetch('streamplan.json', { cache: 'no-cache' }).then(r => r.json()).then(zeige).catch(() => {
   document.getElementById('planGrid').innerHTML = '<p class="note">Den aktuellen Streamplan findest du auf Twitch.</p>';
 });

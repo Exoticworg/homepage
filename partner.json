@@ -1,0 +1,18 @@
+{
+  "partner": [
+    {
+      "name": "030tattoo",
+      "art": "partner",
+      "text": "Mein Tätowierer. Wer Tinte mit Charakter will, ist hier richtig.",
+      "url": "",
+      "code": ""
+    },
+    {
+      "name": "Instant Gaming",
+      "art": "werbung",
+      "text": "Spiele-Keys günstiger als im Store. Über meinen Link unterstützt du den Stream.",
+      "url": "https://www.instant-gaming.com/",
+      "code": ""
+    }
+  ]
+}
