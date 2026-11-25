@@ -1,0 +1,47 @@
+# Holt die Twitch-Profilbilder der Freunde aus freunde.json und legt sie
+# unter assets/freunde/ ab. So lädt die Homepage die Bilder von hier und
+# nicht von Twitch – Besucher-Daten gehen nicht an Dritte.
+name: Freunde-Bilder holen
+
+on:
+  push:
+    branches: [main]
+    paths: [freunde.json]
+  schedule:
+    - cron: "17 4 * * 1"      # jeden Montag früh, falls jemand sein Bild ändert
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  bilder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Profilbilder laden
+        run: |
+          mkdir -p assets/freunde
+          for name in $(jq -r '.freunde[].twitch // empty' freunde.json | tr 'A-Z' 'a-z'); do
+            case "$name" in *[!a-z0-9_]*|"") echo "übersprungen: $name"; continue;; esac
+            url=$(curl -fsS --max-time 20 "https://decapi.me/twitch/avatar/$name" || true)
+            case "$url" in https://static-cdn.jtvnw.net/*) ;; *) echo "kein Bild für $name: $url"; continue;; esac
+            url="${url/300x300/150x150}"
+            if curl -fsS --max-time 30 -o "assets/freunde/$name.tmp" "$url"; then
+              mv "assets/freunde/$name.tmp" "assets/freunde/$name.png"; echo "ok: $name"
+            else
+              rm -f "assets/freunde/$name.tmp"; echo "Download fehlgeschlagen: $name"
+            fi
+          done
+
+      - name: Speichern und Seite neu bauen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add assets/freunde
+          if git diff --cached --quiet; then echo "keine Änderungen"; exit 0; fi
+          git -c user.name="ExoticWorg Bot" -c user.email="actions@users.noreply.github.com" commit -m "Freunde-Bilder aktualisiert"
+          git push
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

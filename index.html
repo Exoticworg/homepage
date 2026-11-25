@@ -180,7 +180,7 @@ fetch('freunde.json', { cache: 'no-cache' }).then(r => r.json()).then(F => {
   const L = (F.freunde || []).filter(f => f && f.name && /^[A-Za-z0-9_]{3,25}$/.test(f.twitch || ''));
   if (!L.length) { document.getElementById('freunde').remove(); document.querySelector('.nav a[href="#freunde"]')?.remove(); return; }
   document.getElementById('freundeGrid').innerHTML = L.map(f => `<a class="card fr" href="https://www.twitch.tv/${esc(f.twitch.toLowerCase())}" target="_blank" rel="noopener">
-      <span class="av">${esc(f.name.slice(0, 1).toUpperCase())}</span>
+      <span class="av">${esc(f.name.slice(0, 1).toUpperCase())}<img src="assets/freunde/${esc(f.twitch.toLowerCase())}.png" alt="" loading="lazy" onerror="this.remove()"></span>
       <span class="fx"><b>${esc(f.name)}</b><small>${f.text ? esc(f.text) : 'twitch.tv/' + esc(f.twitch.toLowerCase())}</small></span>
     </a>`).join('');
 }).catch(() => { document.getElementById('freunde').remove(); });
