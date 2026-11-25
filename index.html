@@ -36,7 +36,7 @@
       <img class="logo" src="assets/logo_full.png" alt="ExoticWorg" width="520" height="347">
       <p class="claim">Streams · Abenteuer · Sammelkarten</p>
       <p class="lead">Hier heult der Worg: Survival, Shooter, Story-Games und alles, was nachts spannend wird. Und wenn der Stream aus ist, geht's um Pokémon- und Digimon-Karten.</p>
-      <div class="live" id="nextStream"><i></i><span>Streams meist abends ab 19 Uhr</span></div>
+      <div class="live" id="nextStream"><i></i><span>Streamplan wird geladen …</span></div>
       <div class="cta">
         <a class="btn p" href="https://www.twitch.tv/exoticworg" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0 1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
@@ -150,53 +150,42 @@ const heute = ORDER[new Date().getDay()];
 const frei = t => !t || /kein\s*stream|^pause$|^frei$|^-+$/i.test(String(t).trim());
 function zeige(P) {
   const T = {}; for (const [k, v] of Object.entries(P.tage || {})) T[k] = v && !frei(v.spiel) ? v : { zeit: '', spiel: '' };
+  const f = d => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+  const info = document.getElementById('planWoche'), next = document.querySelector('#nextStream span');
   const ab = P.woche_ab ? new Date(P.woche_ab + 'T00:00:00') : null;
-  const aktuell = ab && (Date.now() - ab) < 8 * 864e5;
-  document.getElementById('planGrid').innerHTML = WOCHE.map(t => {
-    const p = T[t] || {};
-    return `<div class="day ${p.spiel ? 'on' : 'off'} ${t === heute && aktuell ? 'today' : ''}">
-      <span class="d">${NAMEN[t]}</span>
+  if (!ab || isNaN(ab)) { info.textContent = ''; return; }
+  const bis = new Date(ab); bis.setDate(ab.getDate() + 6);
+  const now = new Date(), endeWoche = new Date(bis); endeWoche.setHours(23, 59, 59);
+  const vorbei = now > endeWoche, kommend = now < ab;
+  // Streampause: ganze Woche aus
+  if (P.pause) {
+    document.getElementById('planGrid').innerHTML = `<div class="card" style="grid-column:1/-1"><h3>Streampause</h3><p>${esc(P.hinweis || 'Gerade finden keine Streams statt. Folge auf Twitch, dann verpasst du den Neustart nicht.')}</p></div>`;
+    info.textContent = ''; next.textContent = 'Gerade Streampause' + (P.hinweis ? ' – ' + P.hinweis : '');
+    return;
+  }
+  // Raster: echte Daten dieser Woche
+  document.getElementById('planGrid').innerHTML = WOCHE.map((t, i) => {
+    const p = T[t] || {}, d = new Date(ab); d.setDate(ab.getDate() + i);
+    const istHeute = d.toDateString() === now.toDateString();
+    return `<div class="day ${p.spiel ? 'on' : 'off'} ${istHeute ? 'today' : ''} ${vorbei ? 'alt' : ''}">
+      <span class="d">${NAMEN[t]} <small>${f(d)}</small></span>
       ${p.spiel ? `<span class="t">${esc(p.zeit)} Uhr</span><span class="g">${esc(p.spiel)}</span>` : `<span class="t">&nbsp;</span><span class="g">Pause</span>`}
     </div>`;
   }).join('');
-  const bis = ab ? new Date(ab.getTime() + 6 * 864e5) : null;
-  const f = d => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-  document.getElementById('planWoche').textContent = ab ? (aktuell ? `Woche vom ${f(ab)} bis ${f(bis)}` : `Plan vom ${f(ab)} – der neue Plan kommt gleich`) + (P.hinweis ? ' · ' + P.hinweis : '') : '';
-  if (!aktuell) return;
-  const now = new Date();
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(now); d.setDate(now.getDate() + i);
-    const p = T[ORDER[d.getDay()]];
-    if (!p || !p.spiel) continue;
-    const [h, m] = String(p.zeit || '0:0').split(':').map(Number);
-    if (i === 0 && (now.getHours() * 60 + now.getMinutes()) > h * 60 + m + 180) continue;
-    const wann = i === 0 ? 'Heute' : i === 1 ? 'Morgen' : NAMEN[ORDER[d.getDay()]];
-    document.querySelector('#nextStream span').textContent = `Nächster Stream: ${wann}, ${p.zeit} Uhr – ${p.spiel}`;
-    break;
-  }
+  info.textContent = (vorbei ? `Letzter Plan (${f(ab)}–${f(bis)}) – der neue Streamplan folgt` : kommend ? `Kommende Woche: ${f(ab)} bis ${f(bis)}` : `Diese Woche: ${f(ab)} bis ${f(bis)}`) + (P.hinweis ? ' · ' + P.hinweis : '');
+  // Nächster Stream: nur Termine aus genau dieser Woche, nie aus einer Wiederholung
+  let found = null;
+  WOCHE.forEach((t, i) => {
+    const p = T[t]; if (found || !p || !p.spiel) return;
+    const d = new Date(ab); d.setDate(ab.getDate() + i);
+    const [h, m] = String(p.zeit || '0:0').split(':').map(Number); d.setHours(h || 0, m || 0, 0, 0);
+    if (d.getTime() + 3 * 3600e3 > now.getTime()) found = { d, p };
+  });
+  if (!found) { next.textContent = 'Der neue Streamplan kommt am Sonntag'; return; }
+  const tage = Math.round((new Date(found.d).setHours(0, 0, 0, 0) - new Date(now).setHours(0, 0, 0, 0)) / 864e5);
+  const wann = tage === 0 ? 'Heute' : tage === 1 ? 'Morgen' : `${NAMEN[WOCHE[(found.d.getDay() + 6) % 7]]}, ${f(found.d)}`;
+  next.textContent = `Nächster Stream: ${wann}, ${found.p.zeit} Uhr – ${found.p.spiel}`;
 }
-/* Freunde kommen aus freunde.json */
-fetch('freunde.json', { cache: 'no-cache' }).then(r => r.json()).then(F => {
-  const L = (F.freunde || []).filter(f => f && f.name && /^[A-Za-z0-9_]{3,25}$/.test(f.twitch || ''));
-  if (!L.length) { document.getElementById('freunde').remove(); document.querySelector('.nav a[href="#freunde"]')?.remove(); return; }
-  document.getElementById('freundeGrid').innerHTML = L.map(f => `<a class="card fr" href="https://www.twitch.tv/${esc(f.twitch.toLowerCase())}" target="_blank" rel="noopener">
-      <span class="av">${esc(f.name.slice(0, 1).toUpperCase())}<img src="assets/freunde/${esc(f.twitch.toLowerCase())}.png" alt="" loading="lazy" onerror="this.remove()"></span>
-      <span class="fx"><b>${esc(f.name)}</b><small>${f.text ? esc(f.text) : 'twitch.tv/' + esc(f.twitch.toLowerCase())}</small></span>
-    </a>`).join('');
-}).catch(() => { document.getElementById('freunde').remove(); });
-/* Partner kommen aus partner.json */
-fetch('partner.json', { cache: 'no-cache' }).then(r => r.json()).then(P => {
-  const L = (P.partner || []).filter(p => p && p.name);
-  if (!L.length) { document.getElementById('partner').remove(); document.querySelector('.nav a[href="#partner"]')?.remove(); return; }
-  document.getElementById('partnerGrid').innerHTML = L.map(p => {
-    const ok = /^https:\/\//.test(p.url || '');
-    const tag = p.art === 'werbung' ? '<span class="badge ad">Werbung</span>' : '<span class="badge">Partner</span>';
-    const absaetze = String(p.text || '').split(/\n+/).filter(Boolean).map(t => `<p>${esc(t)}</p>`).join('');
-    const inner = `<div class="ph"><b>${esc(p.name)}</b>${tag}</div>${p.titel ? `<div class="pti">${esc(p.titel)}</div>` : ''}${absaetze}${p.code ? `<div class="code">Code: <b>${esc(p.code)}</b></div>` : ''}${ok ? `<span class="go">${esc(p.link_text || 'Zur Seite →')}</span>` : ''}`;
-    const cls = 'card pt' + (p.breit ? ' breit' : '');
-    return ok ? `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="${p.art === 'werbung' ? 'sponsored ' : ''}noopener">${inner}</a>` : `<div class="${cls}">${inner}</div>`;
-  }).join('');
-}).catch(() => { document.getElementById('partner').remove(); });
 fetch('streamplan.json', { cache: 'no-cache' }).then(r => r.json()).then(zeige).catch(() => {
   document.getElementById('planGrid').innerHTML = '<p class="note">Den aktuellen Streamplan findest du auf Twitch.</p>';
 });

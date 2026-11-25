@@ -73,6 +73,8 @@ h2{font-family:var(--deco);font-weight:400;font-size:clamp(34px,5vw,46px);line-h
 .day.on{border-color:rgba(214,50,77,.5);background:linear-gradient(180deg,rgba(163,18,43,.2),var(--panel))}
 .day.on .d{color:var(--gold2)}
 .day.off .g{color:var(--dim);font-weight:400;font-style:italic}
+.day .d small{display:block;letter-spacing:.04em;color:var(--dim);margin-top:2px}
+.day.alt{opacity:.45}
 .day.today{box-shadow:0 0 0 2px var(--gold) inset}
 .note{font-size:13.5px;color:var(--dim);margin-top:14px}
 

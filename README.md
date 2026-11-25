@@ -8,7 +8,10 @@ Homepage von ExoticWorg – läuft über GitHub Pages.
 2. `woche_ab` auf den Montag der neuen Woche setzen (Format `JJJJ-MM-TT`).
 3. Bei jedem Tag `zeit` und `spiel` eintragen. Leer lassen (`""`) = Pause.
 4. Optional `hinweis`, z. B. `"Mittwoch Überraschungsspiel"`.
+   Streampause für die ganze Woche: `"pause": true` (dazu gern ein `hinweis`).
 5. Unten **Commit changes** – nach ca. 1 Minute ist der Plan online.
+
+Die Seite zeigt nur Termine aus genau dieser Woche. Ist die Woche vorbei und noch kein neuer Plan drin, steht dort „Der neue Streamplan kommt am Sonntag“ – kein falscher Termin. Ein Datum in der Zukunft wird als „Kommende Woche“ angezeigt.
 
 Wichtig: Anführungszeichen und Kommas stehen lassen, sonst kann die Seite den Plan nicht lesen.
 
