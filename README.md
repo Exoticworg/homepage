@@ -21,3 +21,11 @@ Datei **`partner.json`** – pro Partner ein Block:
 - `text` – ein, zwei Sätze
 - `url` – Link (muss mit `https://` anfangen; leer = Karte ohne Link)
 - `code` – optional ein Rabattcode
+
+## Freunde ändern
+
+Datei **`freunde.json`** – pro Freund:
+
+- `name` – Anzeigename
+- `twitch` – Twitch-Name wie in der Adresse (twitch.tv/**name**)
+- `text` – optional ein kurzer Satz, sonst wird der Twitch-Link angezeigt

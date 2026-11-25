@@ -23,6 +23,7 @@
       <a href="#stream">Stream</a>
       <a href="#plan">Streamplan</a>
       <a href="#karten">Karten</a>
+      <a href="#freunde">Freunde</a>
       <a href="#partner">Partner</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
@@ -99,6 +100,15 @@
     </div>
   </section>
 
+  <section id="freunde">
+    <div class="wrap">
+      <p class="kicker">Das Rudel</p>
+      <h2>Freunde auf Twitch</h2>
+      <p class="intro">Streamer, mit denen ich gern abhänge, raide und zocke. Schau vorbei und lass ein Follow da.</p>
+      <div class="grid g4" id="freundeGrid"></div>
+    </div>
+  </section>
+
   <section id="partner">
     <div class="wrap">
       <p class="kicker">Mit dabei</p>
@@ -165,6 +175,15 @@ function zeige(P) {
     break;
   }
 }
+/* Freunde kommen aus freunde.json */
+fetch('freunde.json', { cache: 'no-cache' }).then(r => r.json()).then(F => {
+  const L = (F.freunde || []).filter(f => f && f.name && /^[A-Za-z0-9_]{3,25}$/.test(f.twitch || ''));
+  if (!L.length) { document.getElementById('freunde').remove(); document.querySelector('.nav a[href="#freunde"]')?.remove(); return; }
+  document.getElementById('freundeGrid').innerHTML = L.map(f => `<a class="card fr" href="https://www.twitch.tv/${esc(f.twitch.toLowerCase())}" target="_blank" rel="noopener">
+      <span class="av">${esc(f.name.slice(0, 1).toUpperCase())}</span>
+      <span class="fx"><b>${esc(f.name)}</b><small>${f.text ? esc(f.text) : 'twitch.tv/' + esc(f.twitch.toLowerCase())}</small></span>
+    </a>`).join('');
+}).catch(() => { document.getElementById('freunde').remove(); });
 /* Partner kommen aus partner.json */
 fetch('partner.json', { cache: 'no-cache' }).then(r => r.json()).then(P => {
   const L = (P.partner || []).filter(p => p && p.name);

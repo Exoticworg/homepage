@@ -86,6 +86,14 @@ h2{font-family:var(--deco);font-weight:400;font-size:clamp(34px,5vw,46px);line-h
 .games{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
 .tag{border:1px solid var(--line2);border-radius:999px;padding:5px 12px;font-size:13.5px;color:#d8ccb9;background:rgba(21,16,19,.6)}
 
+/* Freunde */
+.fr{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);transition:.15s;padding:16px 18px}
+.fr:hover{border-color:var(--gold);transform:translateY(-2px)}
+.fr .av{flex:0 0 48px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--deco);font-size:26px;color:var(--gold2);background:radial-gradient(circle at 50% 30%,rgba(214,50,77,.4),rgba(163,18,43,.1));border:1px solid rgba(200,166,93,.45)}
+.fr .fx{display:flex;flex-direction:column;min-width:0}
+.fr b{font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr small{color:var(--muted);font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 /* Partner */
 .g3{grid-template-columns:repeat(3,1fr)}
 .pt{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--text);transition:.15s}
