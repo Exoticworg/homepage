@@ -191,8 +191,10 @@ fetch('partner.json', { cache: 'no-cache' }).then(r => r.json()).then(P => {
   document.getElementById('partnerGrid').innerHTML = L.map(p => {
     const ok = /^https:\/\//.test(p.url || '');
     const tag = p.art === 'werbung' ? '<span class="badge ad">Werbung</span>' : '<span class="badge">Partner</span>';
-    const inner = `<div class="ph"><b>${esc(p.name)}</b>${tag}</div><p>${esc(p.text)}</p>${p.code ? `<div class="code">Code: <b>${esc(p.code)}</b></div>` : ''}${ok ? '<span class="go">Zur Seite →</span>' : ''}`;
-    return ok ? `<a class="card pt" href="${esc(p.url)}" target="_blank" rel="${p.art === 'werbung' ? 'sponsored ' : ''}noopener">${inner}</a>` : `<div class="card pt">${inner}</div>`;
+    const absaetze = String(p.text || '').split(/\n+/).filter(Boolean).map(t => `<p>${esc(t)}</p>`).join('');
+    const inner = `<div class="ph"><b>${esc(p.name)}</b>${tag}</div>${p.titel ? `<div class="pti">${esc(p.titel)}</div>` : ''}${absaetze}${p.code ? `<div class="code">Code: <b>${esc(p.code)}</b></div>` : ''}${ok ? `<span class="go">${esc(p.link_text || 'Zur Seite →')}</span>` : ''}`;
+    const cls = 'card pt' + (p.breit ? ' breit' : '');
+    return ok ? `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="${p.art === 'werbung' ? 'sponsored ' : ''}noopener">${inner}</a>` : `<div class="${cls}">${inner}</div>`;
   }).join('');
 }).catch(() => { document.getElementById('partner').remove(); });
 fetch('streamplan.json', { cache: 'no-cache' }).then(r => r.json()).then(zeige).catch(() => {

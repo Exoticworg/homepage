@@ -31,3 +31,5 @@ Datei **`freunde.json`** – pro Freund:
 - `text` – optional ein kurzer Satz, sonst wird der Twitch-Link angezeigt
 
 Die Twitch-Profilbilder holt die Action **„Freunde-Bilder holen“** automatisch, sobald `freunde.json` geändert wird (und jeden Montag). Sie liegen dann in `assets/freunde/`. Ohne Bild zeigt die Seite den Anfangsbuchstaben.
+
+Zusätzliche Felder bei Partnern (optional): `titel` (fette Überschrift), `link_text` (Text des Links), `breit: true` (Karte doppelt so breit). Zeilenumbrüche im `text` mit `\n`.
