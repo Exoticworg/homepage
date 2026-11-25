@@ -1,6 +1,14 @@
 {
   "freunde": [
-    { "name": "CloudyHollow", "twitch": "cloudyhollow", "text": "" },
-    { "name": "ZariWonder", "twitch": "zariwonder", "text": "" }
+    {
+      "name": "CloudyHollow",
+      "twitch": "cloudyhollow",
+      "text": ""
+    },
+    {
+      "name": "ZariWonder",
+      "twitch": "zariwonder",
+      "text": ""
+    }
   ]
 }
