@@ -137,8 +137,9 @@ const ORDER = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], WOCHE = ['Mo', 'Di', '
 const NAMEN = { Mo: 'Montag', Di: 'Dienstag', Mi: 'Mittwoch', Do: 'Donnerstag', Fr: 'Freitag', Sa: 'Samstag', So: 'Sonntag' };
 const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const heute = ORDER[new Date().getDay()];
+const frei = t => !t || /kein\s*stream|^pause$|^frei$|^-+$/i.test(String(t).trim());
 function zeige(P) {
-  const T = P.tage || {};
+  const T = {}; for (const [k, v] of Object.entries(P.tage || {})) T[k] = v && !frei(v.spiel) ? v : { zeit: '', spiel: '' };
   const ab = P.woche_ab ? new Date(P.woche_ab + 'T00:00:00') : null;
   const aktuell = ab && (Date.now() - ab) < 8 * 864e5;
   document.getElementById('planGrid').innerHTML = WOCHE.map(t => {
