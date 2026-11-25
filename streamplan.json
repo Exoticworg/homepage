@@ -1,11 +1,11 @@
 {
-  "woche_ab": "2026-11-16",
+  "woche_ab": "2026-11-23",
   "hinweis": "",
   "tage": {
     "Mo": { "zeit": "19:00", "spiel": "7 Days to Die" },
     "Di": { "zeit": "19:00", "spiel": "HALO" },
-    "Mi": { "zeit": "19:00", "spiel": "Life is Strange" },
-    "Do": { "zeit": "19:00", "spiel": "Crime Scene Cleaner" },
+    "Mi": { "zeit": "19:00", "spiel": "aktuell kein Stream" },
+    "Do": { "zeit": "19:00", "spiel": "aktuell kein Stream" },
     "Fr": { "zeit": "", "spiel": "" },
     "Sa": { "zeit": "", "spiel": "" },
     "So": { "zeit": "", "spiel": "" }
