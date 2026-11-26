@@ -15,20 +15,26 @@ h1{font-family:'Pirata One';font-weight:400;font-size:104px;line-height:1;margin
 .sub{font-size:22px;color:#cdbfaa}
 .rule{height:1px;margin:34px auto 30px;width:70%;background:linear-gradient(90deg,transparent,rgba(214,50,77,.7),rgba(200,166,93,.7),rgba(214,50,77,.7),transparent)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;position:relative}
+.teil{position:relative;margin-bottom:40px}
+.teil h3{font-family:'Pirata One';font-weight:400;font-size:52px;text-align:center;line-height:1}
+.teil .h{text-align:center;color:#c8a65d;font-family:'Cinzel';letter-spacing:.22em;font-size:15px;text-transform:uppercase;margin:8px 0 22px}
+.teil.rpg .h{color:#f1a3b0}
+.teil.rpg .g{border-color:rgba(214,50,77,.35)}
+.c i{display:block;font-style:normal;font-size:15px;color:#c8a65d;font-weight:600;margin-top:2px}
 .g{background:linear-gradient(180deg,rgba(33,26,29,.92),rgba(21,16,19,.92));border:1px solid #3a2c31;border-radius:16px;padding:24px 26px 18px}
 .g h2{font-family:'Cinzel';font-weight:700;font-size:21px;letter-spacing:.14em;text-transform:uppercase;color:#e2c98d;margin-bottom:14px;display:flex;align-items:center;gap:12px}
 .g h2:before{content:"";width:9px;height:9px;transform:rotate(45deg);background:#d6324d;box-shadow:0 0 12px #d6324d}
 .c{display:flex;gap:14px;align-items:baseline;padding:9px 0;border-top:1px solid rgba(78,58,64,.55)}
 .c:first-of-type{border-top:0}
-.c b{font-family:"Segoe UI",system-ui,Arial,sans-serif;font-weight:700;font-size:22px;color:#fff;min-width:150px;letter-spacing:.01em}
+.c b{flex:0 0 190px;font-family:"Segoe UI",system-ui,Arial,sans-serif;font-weight:700;font-size:22px;color:#fff;min-width:150px;letter-spacing:.01em}
 .c span{font-size:18.5px;color:#bfb2a2;line-height:1.35}
 footer{position:relative;text-align:center;margin-top:34px;font-size:19px;color:#a49688}
 footer b{color:#e2c98d;font-weight:600}
 footer .m{font-family:'Cinzel';letter-spacing:.3em;font-size:14px;color:#7a6d64;margin-top:12px;text-transform:uppercase}
 </style></head><body><div class="page"><div class="frame"></div>
-<header><img src="sigil.png"><div class="k">Twitch · ExoticWorg</div><h1>Das Jagdbuch</h1><div class="sub">Befehle für das Rudel – einfach in den Chat schreiben</div></header>
-<div class="rule"></div><div class="grid" id="g"></div>
-<footer>Neu im Rudel? Fang mit <b>!heulen</b> an.<div class="m">twitch.tv/exoticworg · exoticworg.de</div></footer>
+<header><img src="sigil.png"><div class="k">Twitch · ExoticWorg</div><h1>Das Jagdbuch</h1><div class="sub">Alle Chatbefehle für das Rudel</div></header>
+<div class="rule"></div><div id="g"></div>
+<footer>Neu im Rudel? Fang mit <b>!heulen</b> an – im Rollenspiel mit <b>!klasse info</b>.<div class="m">twitch.tv/exoticworg · exoticworg.de</div></footer>
 </div><script>
-fetch('befehle.json').then(r=>r.json()).then(D=>{document.getElementById('g').innerHTML=D.gruppen.map(g=>`<div class="g"><h2>${g.titel}</h2>${g.befehle.map(([c,t])=>`<div class="c"><b>${c}</b><span>${t}</span></div>`).join('')}</div>`).join('');document.body.dataset.ok=1});
+fetch('befehle.json').then(r=>r.json()).then(D=>{document.getElementById('g').innerHTML=D.teile.map((t,i)=>`<div class="teil ${i?'rpg':''}"><h3>${t.titel}</h3><div class="h">${t.hinweis}</div><div class="grid">${t.gruppen.map(g=>`<div class="g"><h2>${g.titel}</h2>${g.befehle.map(([c,a,x])=>`<div class="c"><b>${c}${a?`<i>${a.replace(/</g,'&lt;')}</i>`:''}</b><span>${x}</span></div>`).join('')}</div>`).join('')}</div></div>`).join('');document.body.dataset.ok=1});
 </script></body></html>

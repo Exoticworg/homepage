@@ -1,28 +1,59 @@
 {
-  "gruppen": [
-    { "titel": "Ruf des Rudels", "befehle": [
-      ["!heulen", "Schnauze gen Himmel – ein Heulen durch die Dunkelheit"],
-      ["!rudel", "Zeig, dass du zum Rudel gehörst"],
-      ["!wolf", "Wie viel Prozent Wolf steckt in dir?"],
-      ["!worg", "Entfessle den Fluch der Worgen"],
-      ["!lurk", "Lautlos in die Schatten – das Rudel wacht"]
+  "teile": [
+    { "titel": "Befehle für das Rudel", "hinweis": "Immer aktiv – einfach in den Chat schreiben", "gruppen": [
+      { "titel": "Ruf des Rudels", "befehle": [
+        ["!heulen", "", "Schnauze gen Himmel – ein Heulen durch die Dunkelheit"],
+        ["!rudel", "", "Zeig, dass du zum Rudel gehörst"],
+        ["!wolf", "", "Wie viel Prozent Wolf steckt in dir?"],
+        ["!worg", "", "Entfessle den Fluch der Worgen"],
+        ["!lurk", "", "Lautlos in die Schatten – das Rudel wacht"]
+      ]},
+      { "titel": "Unter dem Mond", "befehle": [
+        ["!mond", "", "Der Mond flüstert dir dein Schicksal zu"],
+        ["!blutmond", "", "Der Blutmond steht über dir – nichts ist sicher"],
+        ["!jagdgeist", "", "Der Jagdgeist fällt sein Urteil über dich"],
+        ["!instinkt", "", "Flucht ist feige, Jagd ist Ehre"]
+      ]},
+      { "titel": "Die Jagd", "befehle": [
+        ["!jagen", "", "Der Mond wählt deinen Jagdgefährten"],
+        ["!fährte", "", "Hinterlass eine Fährte im Nebel"],
+        ["!kralle", "", "Wetz die Krallen an uraltem Stein"],
+        ["!biss", "", "Setz zum Biss an – wen trifft es heute?"]
+      ]},
+      { "titel": "Chaos im Lager", "befehle": [
+        ["!fleisch", "", "Wirf etwas nach jemandem … meistens Fleisch"],
+        ["!witz", "", "Worgen-Humor mit Krallen"],
+        ["!fuse", "", "Die Legende von F.U.S.E."]
+      ]}
     ]},
-    { "titel": "Unter dem Mond", "befehle": [
-      ["!mond", "Der Mond flüstert dir dein Schicksal zu"],
-      ["!blutmond", "Der Blutmond steht über dir – nichts ist sicher"],
-      ["!jagdgeist", "Der Jagdgeist fällt sein Urteil über dich"],
-      ["!instinkt", "Flucht ist feige, Jagd ist Ehre"]
-    ]},
-    { "titel": "Die Jagd", "befehle": [
-      ["!jagen", "Der Mond wählt deinen Jagdgefährten"],
-      ["!fährte", "Hinterlass eine Fährte im Nebel"],
-      ["!kralle", "Wetz die Krallen an uraltem Stein"],
-      ["!biss", "Setz zum Biss an – wen trifft es heute?"]
-    ]},
-    { "titel": "Chaos im Lager", "befehle": [
-      ["!fleisch", "Wirf etwas nach jemandem im Chat … meistens Fleisch"],
-      ["!witz", "Worgen-Humor mit Krallen"],
-      ["!fuse", "Die Legende von F.U.S.E."]
+    { "titel": "Das Rollenspiel", "hinweis": "Aktiv in Solo-Streams – level deinen Worgen im Chat", "gruppen": [
+      { "titel": "Der erste Schritt", "befehle": [
+        ["!klasse", "wählen <klasse>", "Krieger, Magier, Druide oder Jäger – mit info vorher ansehen"],
+        ["!pfad", "", "Ab Level 10: spezialisiere deine Klasse"],
+        ["!begleiter", "wählen <begleiter>", "Ein treuer Gefährte an deiner Seite"],
+        ["!stat", "", "Deine Werte auf einen Blick"],
+        ["!inventar", "", "Was trägst du alles bei dir?"]
+      ]},
+      { "titel": "In den Kampf", "befehle": [
+        ["!überleben", "", "Stell dich der Wildnis – Beute und Erfahrung warten"],
+        ["!dungeon", "", "Kammer für Kammer in die Tiefe, Entscheidung mit a, b oder c"],
+        ["!duel", "<name>", "Fordere jemanden aus dem Rudel heraus"],
+        ["!raidboss", "join", "Gemeinsam gegen den Raidboss"],
+        ["!weltboss", "join", "Wenn er erscheint, kämpft der ganze Chat"]
+      ]},
+      { "titel": "Schmiede & Kräuter", "befehle": [
+        ["!waffencraft", "", "Schmiede die Waffe deiner Klasse"],
+        ["!armorcraft", "", "Bessere Rüstung, mehr Schutz"],
+        ["!ausrüsten", "<item>", "Leg Waffe und Nebenhand an"],
+        ["!alchemie", "", "Braue Tränke aus deiner Beute"],
+        ["!heilen", "", "Rast am Feuer – HP zurückholen"],
+        ["!pflanze · !giessen · !ernte", "", "Dein eigenes Kräuterbeet"]
+      ]},
+      { "titel": "Handel & Glück", "befehle": [
+        ["!handeln", "anbieten …", "Tausche Beute mit dem Rudel"],
+        ["!münzwurf", "", "Kopf oder Zahl – zu zweit, mit Einsatz"],
+        ["!würfeln", "", "W20-Duell um deinen Einsatz"]
+      ]}
     ]}
   ]
 }

@@ -81,7 +81,8 @@ h2{font-family:var(--deco);font-weight:400;font-size:clamp(34px,5vw,46px);line-h
 .note{font-size:13.5px;color:var(--dim);margin-top:14px}
 
 /* Jagdbuch */
-.jb{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:center}
+.jb{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:start}
+.jb>div:first-child{position:sticky;top:110px}
 .jbimg{display:block;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.5);transition:.2s}
 .jbimg:hover{transform:translateY(-3px);border-color:var(--gold)}
 /* Live */
@@ -142,6 +143,7 @@ footer a{color:var(--muted)}
   .g4,.g3,.g4.g5{grid-template-columns:repeat(2,1fr)}
   .plan{grid-template-columns:repeat(4,1fr)}
   .split,.jb{grid-template-columns:1fr}
+  .jb>div:first-child{position:static}
 }
 @media (max-width:620px){
   .nav{display:none}
