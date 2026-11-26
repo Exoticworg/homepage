@@ -36,3 +36,7 @@ Datei **`freunde.json`** – pro Freund:
 Die Twitch-Profilbilder holt die Action **„Freunde-Bilder holen“** automatisch, sobald `freunde.json` geändert wird (und jeden Montag). Sie liegen dann in `assets/freunde/`. Ohne Bild zeigt die Seite den Anfangsbuchstaben.
 
 Zusätzliche Felder bei Partnern (optional): `titel` (fette Überschrift), `link_text` (Text des Links), `breit: true` (Karte doppelt so breit). Zeilenumbrüche im `text` mit `\n`.
+
+## Discord-Einladung
+
+In `index.html` die Zeile `const DISCORD = '';` suchen und die Einladung eintragen, z. B. `const DISCORD = 'https://discord.gg/xxxx';`. Dann erscheint die Discord-Karte bei den Kanälen und „Discord“ im Streamplan wird zum Link.

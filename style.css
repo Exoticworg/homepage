@@ -1,4 +1,5 @@
 @font-face{font-family:'Cinzel';src:url(assets/cinzel.woff2) format('woff2');font-weight:400 900;font-display:swap}
+[hidden]{display:none!important}
 @font-face{font-family:'Pirata One';src:url(assets/pirata.woff2) format('woff2');font-weight:400;font-display:swap}
 :root{
   --bg:#0b090a;--panel:#151013;--panel2:#1d1619;--line:#33272b;--line2:#4e3a40;
@@ -51,6 +52,7 @@ h2{font-family:var(--deco);font-weight:400;font-size:clamp(34px,5vw,46px);line-h
 .grid{display:grid;gap:18px}
 .g2{grid-template-columns:repeat(2,1fr)}
 .g4{grid-template-columns:repeat(4,1fr)}
+.g4.g5{grid-template-columns:repeat(5,1fr)}
 .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:22px}
 .card h3{font-family:var(--serif);font-size:15px;letter-spacing:.08em;margin:0 0 6px;color:var(--gold2)}
 .card p{margin:0;color:var(--muted);font-size:15px}
@@ -127,13 +129,13 @@ footer a{color:var(--muted)}
 .todo{background:rgba(219,164,74,.12);border:1px dashed #dba44a;color:#f0cd8d;padding:1px 6px;border-radius:5px}
 
 @media (max-width:900px){
-  .g4,.g3{grid-template-columns:repeat(2,1fr)}
+  .g4,.g3,.g4.g5{grid-template-columns:repeat(2,1fr)}
   .plan{grid-template-columns:repeat(4,1fr)}
   .split{grid-template-columns:1fr}
 }
 @media (max-width:620px){
   .nav{display:none}
-  .g2,.g4,.g3{grid-template-columns:1fr}
+  .g2,.g4,.g3,.g4.g5{grid-template-columns:1fr}
   .pt.breit{grid-column:auto}
   .plan{grid-template-columns:1fr 1fr}
   section{padding:56px 0}
