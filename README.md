@@ -39,4 +39,9 @@ Zusätzliche Felder bei Partnern (optional): `titel` (fette Überschrift), `link
 
 ## Discord-Einladung
 
-In `index.html` die Zeile `const DISCORD = '';` suchen und die Einladung eintragen, z. B. `const DISCORD = 'https://discord.gg/xxxx';`. Dann erscheint die Discord-Karte bei den Kanälen und „Discord“ im Streamplan wird zum Link.
+Die Einladung steht in **`discord.json`**. Weil Discord-Links ablaufen, erneuert die Action **„Discord-Einladung erneuern“** sie jeden Tag automatisch – dafür einmalig:
+
+1. Discord → Servereinstellungen → **Widget** → „Server-Widget aktivieren“ einschalten und einen **Einladungskanal** wählen.
+2. Dort die **Server-ID** kopieren und in `discord.json` bei `server_id` eintragen.
+
+Ohne Server-ID bleibt der eingetragene Link stehen und muss von Hand erneuert werden.

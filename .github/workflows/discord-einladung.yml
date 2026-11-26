@@ -1,0 +1,44 @@
+# Discord-Einladungen laufen ab. Diese Action holt täglich eine frische
+# Einladung über das Server-Widget und schreibt sie in discord.json.
+# Voraussetzung: In Discord unter Servereinstellungen → Widget
+# „Server-Widget aktivieren“ an + „Einladungskanal“ gewählt, und die
+# Server-ID steht in discord.json.
+name: Discord-Einladung erneuern
+
+on:
+  schedule:
+    - cron: "41 3 * * *"      # jeden Tag früh
+  push:
+    branches: [main]
+    paths: [discord.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  einladung:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Neue Einladung holen
+        run: |
+          id=$(jq -r '.server_id // ""' discord.json)
+          case "$id" in ""|*[!0-9]*) echo "Keine Server-ID in discord.json – nichts zu tun."; exit 0;; esac
+          inv=$(curl -fsS --max-time 20 "https://discord.com/api/guilds/$id/widget.json" | jq -r '.instant_invite // ""')
+          case "$inv" in https://discord.com/invite/*|https://discord.gg/*) ;; *) echo "::warning::Kein Einladungslink im Widget – ist das Widget an und ein Einladungskanal gewählt?"; exit 0;; esac
+          inv="https://discord.gg/${inv##*/}"
+          alt=$(jq -r '.invite // ""' discord.json)
+          if [ "$inv" = "$alt" ]; then echo "Einladung unverändert: $inv"; exit 0; fi
+          jq --arg i "$inv" '.invite = $i' discord.json > d.tmp && mv d.tmp discord.json
+          echo "Neue Einladung: $inv"
+      - name: Speichern und Seite neu bauen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add discord.json
+          if git diff --cached --quiet; then exit 0; fi
+          git -c user.name="ExoticWorg Bot" -c user.email="actions@users.noreply.github.com" commit -m "Discord-Einladung erneuert"
+          git push
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

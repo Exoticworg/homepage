@@ -189,13 +189,14 @@ function zeige(P) {
   const wann = tage === 0 ? 'Heute' : tage === 1 ? 'Morgen' : `${NAMEN[WOCHE[(found.d.getDay() + 6) % 7]]}, ${f(found.d)}`;
   next.textContent = `Nächste Jagd: ${wann}, ${found.p.zeit} Uhr – ${found.p.spiel}`;
 }
-/* Discord-Einladung: hier eintragen, dann erscheinen Karte und Links */
-const DISCORD = 'https://discord.gg/VuYMDEPcp';
-if (/^https:\/\/(discord\.gg|discord\.com)\//.test(DISCORD)) {
-  const c = document.getElementById('dcCard'); c.href = DISCORD; c.hidden = false;
+/* Discord-Einladung kommt aus discord.json (wird automatisch erneuert) */
+fetch('discord.json', { cache: 'no-cache' }).then(r => r.json()).then(D => {
+  const url = String(D.invite || '');
+  if (!/^https:\/\/(discord\.gg|discord\.com\/invite)\/[A-Za-z0-9-]+$/.test(url)) return;
+  const c = document.getElementById('dcCard'); c.href = url; c.hidden = false;
   document.getElementById('kanaele').classList.add('g5');
-  const t = document.getElementById('dcText'); t.innerHTML = `<a href="${esc(DISCORD)}" target="_blank" rel="noopener">Discord</a>`;
-}
+  document.getElementById('dcText').innerHTML = `<a href="${esc(url)}" target="_blank" rel="noopener">Discord</a>`;
+}).catch(() => {});
 /* Freunde kommen aus freunde.json */
 fetch('freunde.json', { cache: 'no-cache' }).then(r => r.json()).then(F => {
   const L = (F.freunde || []).filter(f => f && f.name && /^[A-Za-z0-9_]{3,25}$/.test(f.twitch || ''));
