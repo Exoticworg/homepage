@@ -45,3 +45,12 @@ Die Einladung steht in **`discord.json`**. Weil Discord-Links ablaufen, erneuert
 2. Dort die **Server-ID** kopieren und in `discord.json` bei `server_id` eintragen.
 
 Ohne Server-ID bleibt der eingetragene Link stehen und muss von Hand erneuert werden.
+
+## Automatik (läuft von selbst)
+
+- **Live-Status** – alle 10 Minuten wird geprüft, ob der Kanal live ist. Dann zeigt die Seite „Der Worg jagt gerade live“. GitHub startet geplante Abläufe manchmal ein paar Minuten später, die Anzeige kann also etwas hinterherhinken.
+- **Freunde-Bilder** und **Discord-Einladung** – siehe oben.
+
+## Jagdbuch (Befehle-Bild)
+
+Das Bild `assets/jagdbuch.png` wird aus `jagdbuch-quelle/befehle.json` erzeugt. Neue Befehle einfach Claude schicken, dann wird das Bild neu gebaut.

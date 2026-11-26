@@ -5,9 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ExoticWorg – Der Worg jagt auf Twitch</title>
 <meta name="description" content="ExoticWorg – wenn der Mond aufgeht, jagt der Worg auf Twitch. Schließ dich dem Rudel an. Dazu Pokémon- &amp; Digimon-Karten aus seinem Hort.">
-<meta property="og:title" content="ExoticWorg – Twitch-Streams & Sammelkarten">
-<meta property="og:description" content="Gaming-Streams auf Twitch und Sammelkarten von ExoticWorg.">
-<meta property="og:image" content="https://exoticworg.de/assets/logo_full.png">
+<meta property="og:title" content="ExoticWorg – Der Worg jagt auf Twitch">
+<meta property="og:description" content="Wenn der Mond aufgeht, jagt der Worg. Schließ dich dem Rudel an – Streams, Chatbefehle und Schätze aus dem Hort.">
+<meta property="og:image" content="https://exoticworg.de/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:url" content="https://exoticworg.de/">
 <meta name="theme-color" content="#0b090a">
 <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -22,6 +27,7 @@
     <nav class="nav" aria-label="Hauptmenü">
       <a href="#stream">Stream</a>
       <a href="#plan">Streamplan</a>
+      <a href="#befehle">Befehle</a>
       <a href="#karten">Karten</a>
       <a href="#freunde">Freunde</a>
       <a href="#partner">Partner</a>
@@ -38,9 +44,9 @@
       <p class="lead">Wenn der Mond aufgeht, fällt die Maske. Dann jagt der Worg durch Zombiehorden, Alien-Schlachtfelder und finstere Tatorte – das Rudel im Chat immer im Nacken. Und wenn die Sonne kommt, hütet er seinen Hort: Pokémon- und Digimon-Karten.</p>
       <div class="live" id="nextStream"><i></i><span>Die Fährte wird aufgenommen …</span></div>
       <div class="cta">
-        <a class="btn p" href="https://www.twitch.tv/exoticworg" target="_blank" rel="noopener">
+        <a class="btn p" id="twitchBtn" href="https://www.twitch.tv/exoticworg" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0 1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
-          Zur Jagd auf Twitch</a>
+          <span>Zur Jagd auf Twitch</span></a>
         <a class="btn" href="#karten">Einen Blick in den Hort</a>
       </div>
     </div>
@@ -78,6 +84,18 @@
       <p class="intro">Feste Nächte, feste Beute. Ändert sich etwas, heult es zuerst auf <span id="dcText">Discord</span> – und nur dort.</p>
       <div class="plan" id="planGrid"></div>
       <p class="note"><span id="planWoche"></span><br>Alle Zeiten in deutscher Zeit.</p>
+    </div>
+  </section>
+
+  <section id="befehle">
+    <div class="wrap jb">
+      <div>
+        <p class="kicker">Das Jagdbuch</p>
+        <h2>Befehle für das Rudel</h2>
+        <p class="intro">Im Chat bist du nicht nur Zuschauer. Heul mit, folg der Fährte oder wirf mit Fleisch – schreib einfach einen der Befehle in den Twitch-Chat. Neu hier? Fang mit <b>!heulen</b> an.</p>
+        <a class="btn" href="assets/jagdbuch.png" target="_blank" rel="noopener">Jagdbuch in voller Größe</a>
+      </div>
+      <a class="jbimg" href="assets/jagdbuch.png" target="_blank" rel="noopener"><img src="assets/jagdbuch.jpg" width="1200" height="1320" loading="lazy" alt="Das Jagdbuch – Chatbefehle: !heulen, !rudel, !wolf, !worg, !lurk, !mond, !blutmond, !jagdgeist, !instinkt, !jagen, !fährte, !kralle, !biss, !fleisch, !witz, !fuse"></a>
     </div>
   </section>
 
@@ -154,7 +172,8 @@ const frei = t => !t || /kein\s*stream|^pause$|^frei$|^-+$/i.test(String(t).trim
 function zeige(P) {
   const T = {}; for (const [k, v] of Object.entries(P.tage || {})) T[k] = v && !frei(v.spiel) ? v : { zeit: '', spiel: '' };
   const f = d => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-  const info = document.getElementById('planWoche'), next = document.querySelector('#nextStream span');
+  const info = document.getElementById('planWoche'), nextEl = document.querySelector('#nextStream span');
+  const next = { set textContent(t) { if (!LIVE) nextEl.textContent = t; } };
   const ab = P.woche_ab ? new Date(P.woche_ab + 'T00:00:00') : null;
   if (!ab || isNaN(ab)) { info.textContent = ''; return; }
   const bis = new Date(ab); bis.setDate(ab.getDate() + 6);
@@ -189,6 +208,17 @@ function zeige(P) {
   const wann = tage === 0 ? 'Heute' : tage === 1 ? 'Morgen' : `${NAMEN[WOCHE[(found.d.getDay() + 6) % 7]]}, ${f(found.d)}`;
   next.textContent = `Nächste Jagd: ${wann}, ${found.p.zeit} Uhr – ${found.p.spiel}`;
 }
+let LIVE = '';
+/* Live-Status kommt aus live.json (alle paar Minuten von der Action aktualisiert) */
+fetch('live.json', { cache: 'no-cache' }).then(r => r.json()).then(L => {
+  const frisch = L.stand && (Date.now() - new Date(L.stand)) < 45 * 60e3;
+  if (!L.live || !frisch) return;
+  LIVE = 'Der Worg jagt gerade live' + (L.spiel ? ': ' + L.spiel : '');
+  const n = document.getElementById('nextStream');
+  n.classList.add('on'); n.querySelector('span').textContent = LIVE;
+  document.querySelector('#twitchBtn span').textContent = 'Jetzt live zuschauen';
+  document.querySelector('.brand').classList.add('onair');
+}).catch(() => {});
 /* Discord-Einladung kommt aus discord.json (wird automatisch erneuert) */
 fetch('discord.json', { cache: 'no-cache' }).then(r => r.json()).then(D => {
   const url = String(D.invite || '');

@@ -1,0 +1,58 @@
+# Schaut alle 10 Minuten, ob ExoticWorg auf Twitch live ist, und schreibt
+# das Ergebnis in live.json. Die Homepage zeigt dann „Der Worg jagt gerade live“.
+# Gespeichert wird nur, wenn sich etwas ändert (an/aus/Spiel) – oder alle
+# 30 Minuten während des Streams, damit die Anzeige frisch bleibt.
+name: Live-Status
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: live-status
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Twitch fragen
+        id: q
+        run: |
+          kanal=exoticworg
+          up=$(curl -fsS --max-time 15 "https://decapi.me/twitch/uptime/$kanal" || echo "fehler")
+          if echo "$up" | grep -qiE "offline|fehler|error|not found"; then live=false; else live=true; fi
+          if [ "$up" = "fehler" ]; then echo "decapi nicht erreichbar – nichts ändern"; echo "skip=1" >> $GITHUB_OUTPUT; exit 0; fi
+          spiel=""; titel=""
+          if [ "$live" = true ]; then
+            spiel=$(curl -fsS --max-time 15 "https://decapi.me/twitch/game/$kanal" || true)
+            titel=$(curl -fsS --max-time 15 "https://decapi.me/twitch/title/$kanal" || true)
+          fi
+          jetzt=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          alt_live=$(jq -r '.live' live.json); alt_spiel=$(jq -r '.spiel' live.json); alt_stand=$(jq -r '.stand // ""' live.json)
+          alt_seit=$(jq -r '.seit // ""' live.json)
+          seit="$alt_seit"; [ "$live" = true ] && [ "$alt_live" != true ] && seit="$jetzt"; [ "$live" = false ] && seit=""
+          alt_s=$(date -d "${alt_stand:-1970-01-01}" +%s 2>/dev/null || echo 0); alter=$(( $(date +%s) - alt_s ))
+          if [ "$live" = "$alt_live" ] && [ "$spiel" = "$alt_spiel" ] && { [ "$live" = false ] || [ $alter -lt 1700 ]; }; then
+            echo "unverändert (live=$live)"; echo "skip=1" >> $GITHUB_OUTPUT; exit 0
+          fi
+          jq -n --argjson live "$live" --arg spiel "$spiel" --arg titel "$titel" --arg seit "$seit" --arg stand "$jetzt" \
+            '{live:$live, spiel:$spiel, titel:$titel, seit:$seit, stand:$stand}' > live.json
+          cat live.json
+      - name: Speichern und Seite neu bauen
+        if: steps.q.outputs.skip != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add live.json
+          git diff --cached --quiet && exit 0
+          git -c user.name="ExoticWorg Bot" -c user.email="actions@users.noreply.github.com" commit -m "Live-Status aktualisiert"
+          git pull --rebase -q || true
+          git push
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
