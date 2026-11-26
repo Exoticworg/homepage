@@ -190,7 +190,7 @@ function zeige(P) {
   next.textContent = `Nächste Jagd: ${wann}, ${found.p.zeit} Uhr – ${found.p.spiel}`;
 }
 /* Discord-Einladung: hier eintragen, dann erscheinen Karte und Links */
-const DISCORD = '';
+const DISCORD = 'https://discord.gg/VuYMDEPcp';
 if (/^https:\/\/(discord\.gg|discord\.com)\//.test(DISCORD)) {
   const c = document.getElementById('dcCard'); c.href = DISCORD; c.hidden = false;
   document.getElementById('kanaele').classList.add('g5');
