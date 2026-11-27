@@ -84,6 +84,7 @@
       <p class="intro">Feste Nächte, feste Beute. Ändert sich etwas, heult es zuerst auf <span id="dcText">Discord</span> – und nur dort.</p>
       <div class="plan" id="planGrid"></div>
       <p class="note"><span id="planWoche"></span><br>Alle Zeiten in deutscher Zeit.</p>
+      <a class="planbild" id="planBild" href="assets/streamplan.jpg" target="_blank" rel="noopener" hidden><img alt="Streamplan als Bild" loading="lazy"></a>
     </div>
   </section>
 
@@ -171,7 +172,7 @@ const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&a
 const heute = ORDER[new Date().getDay()];
 const frei = t => !t || /kein\s*stream|^pause$|^frei$|^-+$/i.test(String(t).trim());
 function zeige(P) {
-  const T = {}; for (const [k, v] of Object.entries(P.tage || {})) T[k] = v && !frei(v.spiel) ? v : { zeit: '', spiel: '' };
+  const T = {}; for (const [k, v] of Object.entries(P.tage || {})) T[k] = v && !frei(v.spiel) && String(v.zeit || '').trim() ? v : { zeit: '', spiel: '', notiz: v && !frei(v.spiel) ? v.spiel : '' };
   const f = d => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
   const info = document.getElementById('planWoche'), nextEl = document.querySelector('#nextStream span');
   const next = { set textContent(t) { if (!LIVE) nextEl.textContent = t; } };
@@ -186,13 +187,15 @@ function zeige(P) {
     info.textContent = ''; next.textContent = 'Der Worg ruht gerade' + (P.hinweis ? ' – ' + P.hinweis : '');
     return;
   }
+  // Bild aus dem Streamplaner (nur wenn es zur Woche passt)
+  if (P.bild) { const a = document.getElementById('planBild'); a.href = P.bild; a.querySelector('img').src = P.bild; a.hidden = false; }
   // Raster: echte Daten dieser Woche
   document.getElementById('planGrid').innerHTML = WOCHE.map((t, i) => {
     const p = T[t] || {}, d = new Date(ab); d.setDate(ab.getDate() + i);
     const istHeute = d.toDateString() === now.toDateString();
     return `<div class="day ${p.spiel ? 'on' : 'off'} ${istHeute ? 'today' : ''} ${vorbei ? 'alt' : ''}">
       <span class="d">${NAMEN[t]} <small>${f(d)}</small></span>
-      ${p.spiel ? `<span class="t">${esc(p.zeit)} Uhr</span><span class="g">${esc(p.spiel)}</span>` : `<span class="t">&nbsp;</span><span class="g">Pause</span>`}
+      ${p.spiel ? `<span class="t">${esc(p.zeit)} Uhr</span><span class="g">${esc(p.spiel)}</span>` : `<span class="t">&nbsp;</span><span class="g">${esc(p.notiz || 'Pause')}</span>`}
     </div>`;
   }).join('');
   info.textContent = (vorbei ? `Letzte Jagdwoche (${f(ab)}–${f(bis)}) – der neue Mondkalender folgt auf Discord` : kommend ? `Kommende Jagdwoche: ${f(ab)} bis ${f(bis)}` : `Diese Jagdwoche: ${f(ab)} bis ${f(bis)}`) + (P.hinweis ? ' · ' + P.hinweis : '');
