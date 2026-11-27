@@ -1,14 +1,35 @@
 {
-  "woche_ab": "2026-11-23",
+  "woche_ab": "2026-11-30",
   "pause": false,
   "hinweis": "",
   "tage": {
-    "Mo": { "zeit": "19:00", "spiel": "7 Days to Die" },
-    "Di": { "zeit": "19:00", "spiel": "HALO" },
-    "Mi": { "zeit": "19:00", "spiel": "aktuell kein Stream" },
-    "Do": { "zeit": "19:00", "spiel": "aktuell kein Stream" },
-    "Fr": { "zeit": "", "spiel": "" },
-    "Sa": { "zeit": "", "spiel": "" },
-    "So": { "zeit": "", "spiel": "" }
+    "Mo": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    },
+    "Di": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    },
+    "Mi": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    },
+    "Do": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    },
+    "Fr": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    },
+    "Sa": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    },
+    "So": {
+      "zeit": "",
+      "spiel": "Erholungsphase"
+    }
   }
 }
